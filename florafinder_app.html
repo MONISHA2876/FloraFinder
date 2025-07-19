@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloraFinder - Plant Care Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f9f0 100%);
+            color: #2d5a2d;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #a8e6a8 0%, #c8f7c8 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #2d5a2d;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-quote {
+            font-size: 1.3em;
+            color: #3d6a3d;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .sunflower {
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        .sunflower-center {
+            position: relative;
+            top: -163px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(#9e3b13, #6d2103);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .sunflower-face {
+            color: #5d4037;
+            font-size: 2em;
+        }
+
+        .sunflower-eyes {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .eye {
+            width: 12px;
+            height: 12px;
+            background: #000;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+
+        .sunflower-smile {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 15px;
+            border: 3px solid #000;
+            border-top: none;
+            border-radius: 0 0 30px 30px;
+        }
+
+        /* Plant Cards Section */
+        .plants-section {
+            padding: 80px 0;
+            background: #f8fdf8;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #2d5a2d;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            border-radius: 2px;
+        }
+
+        .plants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .plant-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid #e8f5e8;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: #4caf50;
+        }
+
+        .plant-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .plant-card:hover .plant-image {
+            transform: scale(1.05);
+        }
+
+        .plant-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d5a2d;
+            margin-bottom: 15px;
+        }
+
+        .plant-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .plant-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4a6a4a;
+        }
+
+        .plant-detail-icon {
+            width: 20px;
+            height: 20px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+        }
+
+        /* Add Plant Section */
+        .add-plant-section {
+            background: linear-gradient(135deg, #c8f7c8 0%, #e8f5e8 100%);
+            padding: 60px 0;
+        }
+
+        .add-plant-form {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2d5a2d;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e8f5e8;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+
+
+        /* Garden Section */
+
+
+        .garden-section {
+            padding-top: 80px;
+            background: #f0f9f0;
+            overflow: hidden;
+        }
+
+      
+
+        .cloud {
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            animation: float 20s infinite linear;
+        }
+
+        .cloud:before {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+        }
+
+        .cloud:after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+        }
+
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 20%;
+            left: -150px;
+            animation-duration: 30s;
+        }
+
+        .cloud1:before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud1:after {
+            width: 60px;
+            height: 30px;
+            top: -10px;
+            right: 10px;
+        }
+
+        .cloud2 {
+            width: 80px;
+            height: 30px;
+            top: 10%;
+            left: -120px;
+            animation-duration: 25s;
+            animation-delay: -10s;
+        }
+
+        .cloud2:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud2:after {
+            width: 50px;
+            height: 25px;
+            top: -8px;
+            right: 8px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(100vw + 150px));
+            }
+        }
+
+        .sun {
+            right: 10%;
+            width: 60px;
+            height: 60px;
+            background: #FFD700;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .plant-container {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            justify-content: space-between;
+        }
+
+        .garden{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ground {
+            position: relative;
+            width: 100vw;
+            height: 100px;
+            background: linear-gradient(to bottom, #4CAF50, #2E7D32);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .plant {
+            position: relative;
+            font-size: 60px;
+            transition: all 0.3s ease;
+            cursor: default;
+            user-select: none;
+        }
+
+        .plant.bounce {
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            80% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        .plant-name-user {
+            position: relative;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #5f338e;
+        }
+
+        .water-drop {
+            position: relative;
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            user-select: none;
+        }
+
+        .water-drop:hover {
+            transform: scale(1.2);
+        }
+
+        .water-drop:active {
+            transform: scale(0.9);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2d5a2d 0%, #3d6a3d 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .footer-quote {
+            font-size: 1.3em;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Animations */
+        @keyframes sway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .empty-garden {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            grid-column: 1 / -1;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>FloraFinder</h1>
+                    <p class="hero-quote">"To plant a garden is to believe in tomorrow."</p>
+                </div>
+                <div class="petals">
+
+                    
+                </div>
+                <div class="sunflower">
+                    <img height="240px" src="https://cdn-icons-png.flaticon.com/512/4525/4525393.png" alt="sunflower">
+                    <div class="sunflower-center">
+                        <div class="sunflower-eyes">
+                            <div class="eye"></div>
+                            <div class="eye"></div>
+                        </div>
+                        <div class="sunflower-smile"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="plants-section">
+        <div class="container">
+            <h2 class="section-title">Plant Care Guide</h2>
+            <div class="plants-grid">
+
+                <div class="plant-card">
+                    <div class="plant-image">🌿</div>
+                    <div class="plant-name">Jade Plant</div>
+                    <div class="plant-info">
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">💧</div>
+                            <span>Water: Weekly </span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌱</div>
+                            <span>Soil: Well-drained</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌡️</div>
+                            <span>Climate: Warm, dry</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-image">🌿</div>
+                    <div class="plant-name">Aloe Vera</div>
+                    <div class="plant-info">
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">💧</div>
+                            <span>Water: Every 2-3 weeks</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌱</div>
+                            <span>Soil: Well-draining</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌡️</div>
+                            <span>Climate: Warm, dry</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-image">🌸</div>
+                    <div class="plant-name">Peace Lily</div>
+                    <div class="plant-info">
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">💧</div>
+                            <span>Water: Weekly</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌱</div>
+                            <span>Soil: Potting mix</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌡️</div>
+                            <span>Climate: Humid, indirect light</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-image">🌵</div>
+                    <div class="plant-name">Snake Plant</div>
+                    <div class="plant-info">
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">💧</div>
+                            <span>Water: Every 2 weeks</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌱</div>
+                            <span>Soil: Well-draining</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌡️</div>
+                            <span>Climate: Low light, dry</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-image">🌹</div>
+                    <div class="plant-name">Rose</div>
+                    <div class="plant-info">
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">💧</div>
+                            <span>Water: 2-3 times per week</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌱</div>
+                            <span>Soil: Rich, well-draining</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌡️</div>
+                            <span>Climate: Full sun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-image">🌱</div>
+                    <div class="plant-name">Spider Plant</div>
+                    <div class="plant-info">
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">💧</div>
+                            <span>Water: When soil is dry</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌱</div>
+                            <span>Soil: Potting mix</span>
+                        </div>
+                        <div class="plant-detail">
+                            <div class="plant-detail-icon">🌡️</div>
+                            <span>Climate: Bright, indirect light</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Plant Section -->
+    <section class="add-plant-section">
+        <div class="container">
+            <h2 class="section-title">Add Your Plant</h2>
+            <form class="add-plant-form" id="addPlantForm">
+                <div class="form-group">
+                    <label for="plantType">Plant Type</label>
+                    <input type="text" id="plantType" name="plantType" placeholder="e.g., Succulent, Herb, Flower" required>
+                </div>
+                <div class="form-group">
+                    <label for="plantNickname">Pet Name (Nickname)</label>
+                    <input type="text" id="plantNickname" name="plantNickname" placeholder="e.g., Sunny, Rosie, Buddy" required>
+                </div>
+                <button type="submit" class="add-btn">🌱 Add to Garden</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Garden Section -->
+    <section class="garden-section">
+        <div class="container">
+            <h2 class="section-title">Your Garden</h2>
+            <div class="sun"></div>
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="garden" id="garden">
+                <div class="empty-garden">Your garden is empty. Add some plants above! 🌱</div>
+            </div>
+        </div>
+        <div class="ground"></div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-quote">"Caring for a plant is caring for your soul."</p>
+        </div>
+    </footer>
+
+    <script>
+
+        const plantEmojis = {
+            'herb': '🌿',
+            'tree': '🌳',
+            'fern': '🌿',
+            'rose': '🌹',
+            'tulip': '🌷',
+            'sunflower': '🌻',
+            'cactus': '🌵',
+            'bamboo': '🎋',
+            'default': '🌱'
+        };
+
+        document.getElementById('addPlantForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const plantType = document.getElementById('plantType').value.trim();
+            const nickname = document.getElementById('plantNickname').value.trim();
+            
+            if (plantType && nickname) {
+                addPlantToGarden(plantType, nickname);
+                
+                
+                document.getElementById('plantType').value = '';
+                document.getElementById('plantNickname').value = '';
+                
+                
+                document.querySelector('.garden-section').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        let userPlants = [];
+
+        // ye basically plant ke icon ke liye hai :]
+        function getPlantEmoji(plantType) {
+            const type = plantType.toLowerCase();
+            for (const key in plantEmojis) {
+                if (type.includes(key)) {
+                    return plantEmojis[key];
+                }
+            }
+            return plantEmojis.default;
+        }
+
+        // ye plant add karega :>
+        function addPlantToGarden(plantType, nickname) {
+            const plant = {
+                id:Date(),
+                type: plantType,
+                nickname: nickname,
+                emoji: getPlantEmoji(plantType),
+            };
+            
+            userPlants.push(plant);
+            renderGarden();
+        }
+
+
+        function renderGarden() {
+            const garden = document.getElementById('garden');
+            
+            if (userPlants.length === 0) {
+                garden.innerHTML = '<div class="empty-garden">Your garden is empty. Add some plants above! 🌱</div>';
+                return;
+            }
+            
+            garden.innerHTML = userPlants.map(plant => `
+                <div class="plant-container">
+                    <div class="water-drop" id="waterDrop">💧</div>
+                    <div class="plant-name-user">${plant.nickname}</div>
+                    <div class="plant" id="plant" style="z-index: 10;">${plant.emoji}</div>
+                </div>
+            `).join('');
+        document.querySelectorAll('.plant-container').forEach(container => {
+        const waterDrop = container.querySelector('.water-drop');
+        const emojiEl = container.querySelector('.plant');
+        let size = 60;
+        waterDrop.addEventListener('click', () => {
+            emojiEl.classList.add('bounce');
+            size += 5;
+            emojiEl.style.fontSize = size + 'px';
+            setTimeout(() => {
+                emojiEl.classList.remove('bounce');
+            }, 600);
+        });
+    });
+        }
+
+
+        renderGarden();
+    </script>
+</body>
+</html>
